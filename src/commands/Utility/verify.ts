@@ -12,26 +12,29 @@ const command: Command = {
     cooldown: 3600,
     allowTip: false,
     async execute(message: Discord.Message, args: string[]) {
-        const verifyLogs = message.client.channels.cache.get("662660931838410754") as Discord.TextChannel
-        const verify = message.client.channels.cache.get("569178590697095168") as Discord.TextChannel
-        if (!message.member!.roles.cache.has("569194996964786178")) { //Verified
-            await message.delete()
-            message.channel.messages.fetch()
-                .then(messages => {
-                    const fiMessages = messages.filter(msgs => msgs.author === message.author);
-                    (message.channel as Discord.TextChannel).bulkDelete(fiMessages)
-                })
-            await message.member!.roles.add("569194996964786178", "Manually verified through the command")
-            await message.member!.roles.remove("756199836470214848", "Manually verified through the command"); //Add Verified and remove Alerted
-            (message.guild!.channels.cache.get("662660931838410754") as Discord.TextChannel)!.send(`${message.author} manually verified themselves through the command`) //verify-logs
+        const verifyLogs = message.client.channels.cache.get("662660931838410754") as Discord.TextChannel,
+            verify = message.client.channels.cache.get("569178590697095168") as Discord.TextChannel,
+            member = message.client.guilds.cache.get("549503328472530974")!.member(message.author.id)
+        if (!member?.roles.cache.has("569194996964786178")) { //Verified
+            if (message.channel.type !== "dm") {
+                await message.delete()
+                message.channel.messages.fetch()
+                    .then(messages => {
+                        const fiMessages = messages.filter(msgs => msgs.author.id === message.author.id);
+                        (message.channel as Discord.TextChannel).bulkDelete(fiMessages)
+                    })
+            }
+            await member?.roles.add("569194996964786178", "Manually verified through the command")
+            await member?.roles.remove("756199836470214848", "Manually verified through the command"); //Add Verified and remove Alerted
+            (message.client.channels.cache.get("662660931838410754") as Discord.TextChannel)!.send(`${message.author} manually verified themselves through the command`) //verify-logs
             client.cooldowns.get(this.name)!.delete(message.author.id)
-        } else if (!message.member!.roles.cache.has("764442984119795732") || /(https:\/\/)([a-z]{2,}\.)?crowdin\.com\/profile?\/?\S{1,}/gi.test(args[0]) || !args[0]) { //Discord Administrator
+        } else if (member && !member.roles.cache.has("764442984119795732") || /(https:\/\/)([a-z]{2,}\.)?crowdin\.com\/profile?\/?\S{1,}/gi.test(args[0]) || !args[0]) { //Discord Administrator
             const userDb: DbUser = await db.collection("users").findOne({ id: message.author.id })
             if (userDb.profile || /(https:\/\/)([a-z]{2,}\.)?crowdin\.com\/profile?\/?\S{1,}/gi.test(args[0])) {
                 message.react("798339571531382874"); //icon_working
                 (message.client.channels.cache.get("662660931838410754") as Discord.TextChannel).send(`${message.author} was unverified.`) //verify-logs
-                await crowdinVerify(message.member!, message.content.match(/(https:\/\/)([a-z]{2,}\.)?crowdin\.com\/profile\/\S{1,}/gi)?.[0], true)
-                message.delete()
+                await crowdinVerify(member!, message.content.match(/(https:\/\/)([a-z]{2,}\.)?crowdin\.com\/profile\/\S{1,}/gi)?.[0], true)
+                if (message.channel.type !== "dm") message.delete()
             } else {
                 await message.member!.roles.remove("569194996964786178", "Unverified") // Verified
                 if (!message.deleted) message.delete()

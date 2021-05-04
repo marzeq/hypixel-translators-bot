@@ -1,6 +1,5 @@
 import Discord from "discord.js"
 import { successColor } from "../config.json"
-import { LangDbEntry } from "../events/stats"
 import { client } from "../index.js"
 import { db } from "../lib/dbclient.js"
 
@@ -18,10 +17,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
                     console.log(`String reviewed in ${channel.name} (saw reaction ${reaction.emoji.name})`)
                 }, 10000)
             }
-            else if (reaction.emoji.name === "vote_maybe") {
-                reaction.users.remove(user.id)
-                const translatorChannel = channel.parent!.children.first()
-            }
+            // TODO add the ability to request an explanation or deny a suggestion
         }
         // Give Polls role if reacted on reaction role message
         else if (reaction.message.id === "800415711864029204" && !user.bot) { //server-info roles message

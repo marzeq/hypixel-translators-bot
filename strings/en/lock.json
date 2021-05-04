@@ -1,0 +1,6 @@
+{
+    "moduleName": "Custom Voice Channel",
+    "lockSuccess": "Successfully locked your channel.",
+    "unlockSuccess": "Successfully unlocked your channel.",
+    "lockError": "Couldn't lock your channel."
+}

@@ -1,0 +1,6 @@
+{
+    "moduleName": "Custom Voice Channel",
+    "alreadyOwner": "You're already the owner of this channel, so nothing changed!",
+    "ownerConnected": "You can only claim this channel once its owner has left!",
+    "claimSuccess": "You have successfully claimed this channel."
+}

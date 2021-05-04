@@ -31,6 +31,18 @@ export interface DbUser {
         totalXp: number,
         levelXp: number,
         messageCount: number
+    },
+    customChannel?: {
+        id?: string,
+        overwrites?: {
+            allow: string[],
+            deny: string[]
+        },
+        settings?: {
+            name: string,
+            locked: boolean,
+            limit: number
+        }
     }
 }
 

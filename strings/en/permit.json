@@ -1,0 +1,6 @@
+{
+    "moduleName": "Custom Voice Channel",
+    "noUserOrRole": "Couldn't find that user or role!",
+    "errorDescription": "Make sure to mention a user or role or include an ID! Names will not work.",
+    "success": "Successfully allowed %%userOrRole%% into the channel!"
+}
